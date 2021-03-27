@@ -24,30 +24,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* in python2: list(u"whatever".encode('utf-16-le')) */
 /*   at most 32 characters or the ugly hack in usb_main.c borks */
 #define MANUFACTURER QMK
-#define PRODUCT AFE405
-#define DESCRIPTION AdaFruit Feather Express F405
+#define PRODUCT GML1
+#define DESCRIPTION Great Mountain Lizard 1
 
-// /* key matrix size */
-// #define MATRIX_ROWS 4
-// #define MATRIX_COLS 4
-
-// #define MATRIX_COL_PINS { B7, B8, B9, B10 }
-// #define MATRIX_ROW_PINS { B3, B4, B5, B6 }
-// #define DIODE_DIRECTION COL2ROW
 
 /* key matrix size */
-#define MATRIX_ROWS 2
-#define MATRIX_COLS 1
+#define MATRIX_ROWS 8
+#define MATRIX_COLS 6
 
-/* Direct connections on silkscreen Ao (which is MCU A4) and silkscreen A1 (which is MCU A5)*/
-#define DIRECT_PINS { \
-    {A4}, \
-    {A5} \
-}
+#define MATRIX_ROW_PINS { B9, C3, C2, C1, B8, C6, C7, B11 }
+#define MATRIX_COL_PINS { A4, A5, A6, A7, C4, C5 }
 
-/* define if matrix has ghost */
-//#define MATRIX_HAS_GHOST
+#define DIODE_DIRECTION COL2ROW
 
-/* Set 0 if debouncing isn't needed */
-#define DEBOUNCE    5
+// The bank of pins (GPIOA, GPIOB, GPIOC) to use for SCL
+#define I2C1_SCL_BANK GPIOB
 
+// The bank of pins (GPIOA, GPIOB, GPIOC) to use for SDA
+#define I2C1_SDA_BANK GPIOB
+
+// The pin number for the SCL pin (0-15)
+#define I2C1_SCL 6
+
+// The pin number for the SCL pin (0-15)
+#define I2C1_SDA 7
