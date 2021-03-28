@@ -251,10 +251,11 @@ void pointing_device_task(void) {
         report.x = -report.x;
         report.y = delta_y < -127 ? -127 : delta_y > 127 ? 127 : delta_y;
 
-
-        pointing_device_set_report(report);
-        pointing_device_send();
     }
+
+    pointing_device_set_report(report);
+    pointing_device_send();
+
     // reset deltas
     delta_x = 0;
     delta_y = 0;

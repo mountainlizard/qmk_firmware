@@ -1,6 +1,7 @@
 #pragma once
 
 #include "quantum.h"
+#include "pointing_device.h"
 
 #define SPI_SCK_PIN B13
 #define SPI_MISO_PIN B14

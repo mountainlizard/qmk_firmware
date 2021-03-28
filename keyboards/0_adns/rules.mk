@@ -50,8 +50,8 @@ STM32_BOOTLOADER_ADDRESS = 0x1FFF0000
 SLEEP_LED_ENABLE = no  # Breathing sleep LED during USB suspend
 
 # BOOTMAGIC_ENABLE = yes      # Virtual DIP switch configuration
-MOUSEKEY_ENABLE = no        # Mouse keys
-EXTRAKEY_ENABLE = no	    # Audio control and System control
+MOUSEKEY_ENABLE = yes        # Mouse keys
+EXTRAKEY_ENABLE = yes	    # Audio control and System control
 CONSOLE_ENABLE = no         # Console for debug
 COMMAND_ENABLE = no         # Commands for debug and configuration
 NKRO_ENABLE = no            # USB Nkey Rollover
@@ -66,8 +66,7 @@ NKRO_ENABLE = no            # USB Nkey Rollover
 # Disable for ARM
 # LTO_ENABLE = no
 
-
-CUSTOM_MATRIX = no # Custom matrix file
+# CUSTOM_MATRIX = no # Custom matrix file
 
 DEFAULT_FOLDER = 0_adns
 
