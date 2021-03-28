@@ -392,6 +392,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 layer_state_t layer_state_set_kb(layer_state_t state) {
 	layer_state_set_user(state);
 
+    if (splash) return state;
+
 	switch (get_highest_layer(state)) {
 		case 1:
 			write_digit_ascii(0, '_', false);
