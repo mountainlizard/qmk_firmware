@@ -241,6 +241,9 @@ void readSensor(void) {
     adns_end();
 
 }
+
+extern bool scrolling;
+
 void pointing_device_task(void) {
     readSensor();
     report_mouse_t report = pointing_device_get_report();
@@ -250,11 +253,20 @@ void pointing_device_task(void) {
         report.x = delta_x < -127 ? -127 : delta_x > 127 ? 127 : delta_x;
         report.x = -report.x;
         report.y = delta_y < -127 ? -127 : delta_y > 127 ? 127 : delta_y;
-
     }
 
+    if (scrolling) {
+        report.v = report.y;
+        report.h = report.x;
+        report.x = 0;
+        report.y = 0;
+    }
+    
     pointing_device_set_report(report);
     pointing_device_send();
+
+    report.v = 0;
+    report.h = 0;
 
     // reset deltas
     delta_x = 0;

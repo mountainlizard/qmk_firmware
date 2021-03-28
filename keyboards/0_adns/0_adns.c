@@ -298,6 +298,13 @@ void matrix_init_kb(void) {
 }
 
 static bool splash = true;
+bool scrolling = false;
+
+void displayBrightness(void) {
+    write_digit_ascii(1, 'B', false);
+    write_digit_ascii(2, '0' + brightness / 10, false);
+    write_digit_ascii(3, '0' + brightness % 10, false);
+}
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     bool process = true;
@@ -340,24 +347,41 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     draw_pixel(x + 2, y + 2, record->event.pressed);
 
     switch (keycode) {
-        case KC_VOLU:
+        case SCROLL:
+            scrolling = record->event.pressed;
+            process = true;
+            break;
+
+        case BRIGHTER:
             if (record->event.pressed) {
                 brighter();
-                write_digit_ascii(1, 'B', false);
-                write_digit_ascii(2, '0' + brightness / 10, false);
-                write_digit_ascii(3, '0' + brightness % 10, false);
-                // write_digits();
+                displayBrightness();
             }
             process = true;
             break;
 
-        case KC_VOLD:
+        case DARKER:
             if (record->event.pressed) {
                 dimmer();
-                write_digit_ascii(1, 'B', false);
-                write_digit_ascii(2, '0' + brightness / 10, false);
-                write_digit_ascii(3, '0' + brightness % 10, false);
-                // write_digits();
+                displayBrightness();
+            }
+            process = true;
+            break;
+
+        case BRIGHTEST:
+            if (record->event.pressed) {
+                brightness = ALPHANUM_MAX_BRIGHTNESS;
+                set_brightness(brightness);
+                displayBrightness();
+            }
+            process = true;
+            break;
+
+        case DARKEST:
+            if (record->event.pressed) {
+                brightness = ALPHANUM_MIN_BRIGHTNESS;
+                set_brightness(brightness);
+                displayBrightness();
             }
             process = true;
             break;

@@ -3,6 +3,15 @@
 #include "quantum.h"
 #include "pointing_device.h"
 
+enum custom_keycodes {
+   BRIGHTER = SAFE_RANGE,
+   DARKER,
+   BRIGHTEST,
+   DARKEST,
+   SCROLL,
+   // etc
+};
+
 #define SPI_SCK_PIN B13
 #define SPI_MISO_PIN B14
 #define SPI_MOSI_PIN B15
