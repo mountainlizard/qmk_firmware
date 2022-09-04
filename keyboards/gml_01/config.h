@@ -36,7 +36,7 @@
 #define SPI_MISO_PIN GP16
 #define ADNS9800_CS_PIN GP17
 #define POINTING_DEVICE_INVERT_X
-
+#define POINTING_DEVICE_TASK_THROTTLE_MS 1
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
