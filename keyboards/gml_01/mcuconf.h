@@ -17,10 +17,14 @@
 
 #include_next <mcuconf.h>
 
-// Note we use I2C0 on Pico, this is indexed as I2C1 by QMK
+// Note we use I2C0 on Pico, this is indexed as I2CD1 by QMK
 #undef RP_I2C_USE_I2C0
 #define RP_I2C_USE_I2C0 TRUE
 
-// TODO: set to false? Not currently used, would be I2C2 in QMK indexing
+// TODO: set to false? Not currently used, would be I2CD2 in QMK indexing
 #undef RP_I2C_USE_I2C1
-#define RP_I2C_USE_I2C1 TRUE
+#define RP_I2C_USE_I2C1 FALSE
+
+// SPI for ADNS9800 trackball
+#undef RP_SPI_USE_SPI0
+#define RP_SPI_USE_SPI0 TRUE

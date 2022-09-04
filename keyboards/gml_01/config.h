@@ -26,9 +26,15 @@
 // OLED on pins GP16 and GP17 (standard Pico labelling)
 #define OLED_DISPLAY_128X32
 #define I2C_DRIVER I2CD1
-#define I2C1_SDA_PIN GP16
-#define I2C1_SCL_PIN GP17
+#define I2C1_SDA_PIN GP4
+#define I2C1_SCL_PIN GP5
 
+// SPI and Trackball settings
+#define SPI_DRIVER SPID0
+#define SPI_SCK_PIN GP18
+#define SPI_MOSI_PIN GP19
+#define SPI_MISO_PIN GP16
+#define ADNS9800_CS_PIN GP17
 
 /*
  * Feature disable options
