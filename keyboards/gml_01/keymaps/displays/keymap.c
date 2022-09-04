@@ -507,20 +507,22 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 layer_state_t layer_state_set_kb(layer_state_t state) {
 	layer_state_set_user(state);
 
-	switch (get_highest_layer(state)) {
-		case 1:
-			write_digit_ascii(0, '_', false);
-			break;
-		case 2:
-			write_digit_raw(0, 0b1);
-			break;
-		case 3:
-			write_digit_ascii(0, '+', false);
-			break;
-		default:
-			write_digit_ascii(0, '-', false);
-	}
-	write_digits();
+  if (!splash) {
+    switch (get_highest_layer(state)) {
+      case 1:
+        write_digit_ascii(0, '_', false);
+        break;
+      case 2:
+        write_digit_raw(0, 0b1);
+        break;
+      case 3:
+        write_digit_ascii(0, '+', false);
+        break;
+      default:
+        write_digit_ascii(0, '-', false);
+    }
+    write_digits();
+  }
 
 	return state;
 }
