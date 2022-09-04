@@ -516,13 +516,34 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   return process;
 }
 
+static int scroll_total_x = 0;
+static int scroll_total_y = 0;
+
+#define SCROLL_DIVISOR 16
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (scrolling_mode) {
-        mouse_report.h = mouse_report.x;
-        mouse_report.v = mouse_report.y;
+
+        scroll_total_x += mouse_report.x;
+        scroll_total_y += mouse_report.y;
+
+        int scroll_x = scroll_total_x / SCROLL_DIVISOR;
+        int scroll_y = scroll_total_y / SCROLL_DIVISOR;
+
+        if (scroll_x != 0) {
+            scroll_total_x -= scroll_x * SCROLL_DIVISOR;
+        }
+        if (scroll_y != 0) {
+            scroll_total_y -= scroll_y * SCROLL_DIVISOR;
+        }
+
+        mouse_report.h = scroll_x;
+        mouse_report.v = -scroll_y;
         mouse_report.x = 0;
         mouse_report.y = 0;
+    } else {
+        scroll_total_x = 0;
+        scroll_total_y = 0;
     }
     return mouse_report;
 }
@@ -549,7 +570,7 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
     }
 
     switch (get_highest_layer(state)) {
-        case 2:  // If we're on the _RAISE layer enable scrolling mode
+        case 3:  // If we're on the FN layer enable scrolling mode
             scrolling_mode = true;
             pointing_device_set_cpi(SCROLLING_CPI);
             break;
