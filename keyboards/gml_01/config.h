@@ -35,6 +35,7 @@
 #define SPI_MOSI_PIN GP19
 #define SPI_MISO_PIN GP16
 #define ADNS9800_CS_PIN GP17
+#define POINTING_DEVICE_INVERT_X
 
 /*
  * Feature disable options
