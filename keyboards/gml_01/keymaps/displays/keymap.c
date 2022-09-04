@@ -38,6 +38,10 @@
 //     )
 // };
 
+static bool scrolling_mode = false;
+
+#define DEFAULT_CPI 8000
+#define SCROLLING_CPI 800
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -438,6 +442,14 @@ void matrix_init_kb(void) {
 
 	set_blink_rate(HT16K33_BLINK_OFF);
 	set_brightness(ALPHANUM_DEFAULT_BRIGHTNESS);
+
+}
+
+// TODO move to gml01.c?
+void pointing_device_init_kb(void){
+    pointing_device_init_user();
+
+    pointing_device_set_cpi(DEFAULT_CPI);
 }
 
 static bool splash = true;
@@ -504,28 +516,54 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   return process;
 }
 
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (scrolling_mode) {
+        mouse_report.h = mouse_report.x;
+        mouse_report.v = mouse_report.y;
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+
+
 layer_state_t layer_state_set_kb(layer_state_t state) {
 	layer_state_set_user(state);
 
-  if (!splash) {
-    switch (get_highest_layer(state)) {
-      case 1:
-        write_digit_ascii(0, '_', false);
-        break;
-      case 2:
-        write_digit_raw(0, 0b1);
-        break;
-      case 3:
-        write_digit_ascii(0, '+', false);
-        break;
-      default:
-        write_digit_ascii(0, '-', false);
+    if (!splash) {
+        switch (get_highest_layer(state)) {
+        case 1:
+            write_digit_ascii(0, '_', false);
+            break;
+        case 2:
+            write_digit_raw(0, 0b1);
+            break;
+        case 3:
+            write_digit_ascii(0, '+', false);
+            break;
+        default:
+            write_digit_ascii(0, '-', false);
+        }
+        write_digits();
     }
-    write_digits();
-  }
+
+    switch (get_highest_layer(state)) {
+        case 2:  // If we're on the _RAISE layer enable scrolling mode
+            scrolling_mode = true;
+            pointing_device_set_cpi(SCROLLING_CPI);
+            break;
+        default:
+            if (scrolling_mode) {  // check if we were scrolling before and set disable if so
+                scrolling_mode = false;
+                pointing_device_set_cpi(DEFAULT_CPI);
+            }
+            break;
+    }
 
 	return state;
 }
+
 
 void matrix_scan_kb(void) {
 	matrix_scan_user();
