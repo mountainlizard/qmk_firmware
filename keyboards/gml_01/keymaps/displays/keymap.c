@@ -426,11 +426,13 @@ void matrix_init_kb(void) {
 }
 
 // TODO move to gml01.c?
+#if POINTING_DEVICE_ENABLE
 void pointing_device_init_kb(void){
     pointing_device_init_user();
 
     pointing_device_set_cpi(DEFAULT_CPI);
 }
+#endif
 
 static bool splash = true;
 
@@ -549,6 +551,7 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
         write_digits();
     }
 
+#if POINTING_DEVICE_ENABLE
     switch (get_highest_layer(state)) {
         case 3:  // If we're on the FN layer enable scrolling mode
             scrolling_mode = true;
@@ -561,6 +564,7 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
             }
             break;
     }
+#endif
 
 	return state;
 }
