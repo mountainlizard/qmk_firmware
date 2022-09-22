@@ -436,6 +436,9 @@ void pointing_device_init_kb(void){
 
 static bool splash = true;
 
+static int left_cols[] = { 1, 5, 4, 3, 0, 2 };
+static int right_cols[] = { 0, 1, 4, 5, 3, 2 };
+
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
   bool process = true;
@@ -449,10 +452,13 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
   int x = record->event.key.col;
   int y = record->event.key.row;
+
   // Adapt for particular layout of rows and columns
-  if (y > 3) {
+  if (y <= 3) {
+    x = left_cols[x];
+  } else {
     y -= 4;
-    x = 11 - x;
+    x = right_cols[x] + 6;
   }
 
   draw_pixel(x + 2, y + 2, record->event.pressed);
