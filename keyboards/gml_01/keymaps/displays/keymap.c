@@ -245,16 +245,16 @@ static const uint16_t alphafonttable[] PROGMEM = {
 };
 
 static void start(uint8_t address) {
-	i2c_start(address);
+  i2c_start(address);
 }
 
 static void write(uint8_t address, uint8_t a) {
-	i2c_data[0] = a;
-	i2c_transmit(address, i2c_data, 1, ALPHANUM_TIMEOUT);
+  i2c_data[0] = a;
+  i2c_transmit(address, i2c_data, 1, ALPHANUM_TIMEOUT);
 }
 
 static void stop(void) {
-	i2c_stop();
+  i2c_stop();
 }
 
 static void set_brightness(uint8_t b) {
@@ -269,43 +269,43 @@ static void set_brightness(uint8_t b) {
 }
 
 static void set_blink_rate(uint8_t b) {
-	if (b > 3) b = 0; // turn off if not sure
+  if (b > 3) b = 0; // turn off if not sure
 
-	start(ALPHANUM_ADDRESS);
-	write(ALPHANUM_ADDRESS, HT16K33_BLINK_CMD | HT16K33_BLINK_DISPLAYON | (b << 1));
-	stop();
+  start(ALPHANUM_ADDRESS);
+  write(ALPHANUM_ADDRESS, HT16K33_BLINK_CMD | HT16K33_BLINK_DISPLAYON | (b << 1));
+  stop();
 
-	start(MATRIX_ADDRESS);
-	write(MATRIX_ADDRESS, HT16K33_BLINK_CMD | HT16K33_BLINK_DISPLAYON | (b << 1));
-	stop();
+  start(MATRIX_ADDRESS);
+  write(MATRIX_ADDRESS, HT16K33_BLINK_CMD | HT16K33_BLINK_DISPLAYON | (b << 1));
+  stop();
 }
 
 static void write_display(uint8_t address, uint16_t *display_buffer) {
 
-	// TODO Use one transfer?
-	i2c_data[0] = 0x00; // start at address $00
+  // TODO Use one transfer?
+  i2c_data[0] = 0x00; // start at address $00
 
-	for (uint8_t i = 0; i < 8; i++) {
-		i2c_data[1 + i * 2] = display_buffer[i] & 0xFF;
-		i2c_data[1 + i * 2 + 1] = display_buffer[i] >> 8;
-	}
+  for (uint8_t i = 0; i < 8; i++) {
+    i2c_data[1 + i * 2] = display_buffer[i] & 0xFF;
+    i2c_data[1 + i * 2 + 1] = display_buffer[i] >> 8;
+  }
 
     start(address);
-	i2c_transmit(address, i2c_data, 1 + 8 * 2, ALPHANUM_TIMEOUT);
-  	stop();
+  i2c_transmit(address, i2c_data, 1 + 8 * 2, ALPHANUM_TIMEOUT);
+    stop();
 }
 
 static void write_digits(void) {
-	write_display(ALPHANUM_ADDRESS, alpha_display_buffer);
+  write_display(ALPHANUM_ADDRESS, alpha_display_buffer);
 }
 
 static void write_matrix(void) {
-	write_display(MATRIX_ADDRESS, matrix_display_buffer);
+  write_display(MATRIX_ADDRESS, matrix_display_buffer);
 }
 
 static void write_all(void) {
-	write_digits();
-	write_matrix();
+  write_digits();
+  write_matrix();
 }
 
 static void write_digit_raw(uint8_t n, uint16_t bitmask) {
@@ -378,50 +378,50 @@ static void draw_pixel(int16_t x, int16_t y, uint16_t color) {
 void clear(void) {
   for (uint8_t i = 0; i < 8; i++) {
     alpha_display_buffer[i] = 0;
-	  matrix_display_buffer[i] = 0;
+    matrix_display_buffer[i] = 0;
   }
 }
 
 static void brighter(void) {
-	if (brightness < ALPHANUM_MAX_BRIGHTNESS) {
-		brightness++;
-		set_brightness(brightness);
-	}
+  if (brightness < ALPHANUM_MAX_BRIGHTNESS) {
+    brightness++;
+    set_brightness(brightness);
+  }
 }
 
 static void dimmer(void) {
-	if (brightness > ALPHANUM_MIN_BRIGHTNESS) {
-		brightness--;
-		set_brightness(brightness);
-	}
+  if (brightness > ALPHANUM_MIN_BRIGHTNESS) {
+    brightness--;
+    set_brightness(brightness);
+  }
 }
 
 static void display_init(void) {
-	start(ALPHANUM_ADDRESS);
-	write(ALPHANUM_ADDRESS, HT16K33_OSC_ON);
-	stop();
-	start(MATRIX_ADDRESS);
-	write(MATRIX_ADDRESS, HT16K33_OSC_ON);
-	stop();
+  start(ALPHANUM_ADDRESS);
+  write(ALPHANUM_ADDRESS, HT16K33_OSC_ON);
+  stop();
+  start(MATRIX_ADDRESS);
+  write(MATRIX_ADDRESS, HT16K33_OSC_ON);
+  stop();
 }
 
 void matrix_init_kb(void) {
-	matrix_init_user();
+  matrix_init_user();
 
-	i2c_init();
-	display_init();
+  i2c_init();
+  display_init();
 
-	// Clear memory, may not be empty
-	clear();
-	write_digit_ascii(0, 'G', false);
-	write_digit_ascii(1, 'm', false);
-	write_digit_ascii(2, 'L', false);
-	write_digit_ascii(3, '1', false);
+  // Clear memory, may not be empty
+  clear();
+  write_digit_ascii(0, 'G', false);
+  write_digit_ascii(1, 'm', false);
+  write_digit_ascii(2, 'L', false);
+  write_digit_ascii(3, '1', false);
 
-	write_all();
+  write_all();
 
-	set_blink_rate(HT16K33_BLINK_OFF);
-	set_brightness(ALPHANUM_DEFAULT_BRIGHTNESS);
+  set_blink_rate(HT16K33_BLINK_OFF);
+  set_brightness(ALPHANUM_DEFAULT_BRIGHTNESS);
 
 }
 
@@ -436,19 +436,48 @@ void pointing_device_init_kb(void){
 
 static bool splash = true;
 
+#define SPLASH_INTERVAL 100
+#define SPLASH_MAX_PHASE 96
+#define SPLASH_START_PHASE 16
+static int splash_delay = 0;
+static int splash_phase = 0;
+
+void matrix_scan_user(void) {
+  if (splash) {
+    splash_delay++;
+    if (splash_delay > SPLASH_INTERVAL) {
+      splash_delay = 0;
+      if (splash_phase < SPLASH_MAX_PHASE) {
+        splash_phase++;
+        for (int x = 0; x < 16; x++) {
+          for (int y = 0; y < 8; y++) {
+            int d = abs((x + y) - (splash_phase - 32));
+            // int d = (x + y) - (splash_phase - 16);
+            // bool on = d == 0 || d == -1 || d == -5;
+            bool on = d < 3;
+            draw_pixel(x, y, on);
+          }
+        }
+        write_all();
+      }
+    }
+  }
+}
+
 static int left_cols[] = { 1, 5, 4, 3, 0, 2 };
 static int right_cols[] = { 0, 1, 4, 5, 3, 2 };
+
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
   bool process = true;
 
-	process_record_user(keycode, record);
+  process_record_user(keycode, record);
 
-	if (splash) {
-		clear();
-		splash = false;
-	}
+  if (splash) {
+    clear();
+    splash = false;
+  }
 
   int x = record->event.key.col;
   int y = record->event.key.row;
@@ -464,38 +493,38 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   draw_pixel(x + 2, y + 2, record->event.pressed);
 
   switch (keycode) {
-		case KC_VOLU:
-			if (record->event.pressed){
-				brighter();
-				write_digit_ascii(1, 'B', false);
-				write_digit_ascii(2, '0' + brightness / 10, false);
-				write_digit_ascii(3, '0' + brightness % 10, false);
-				// write_digits();
-			}
-			process = true;
+    case KC_VOLU:
+      if (record->event.pressed){
+        brighter();
+        write_digit_ascii(1, 'B', false);
+        write_digit_ascii(2, '0' + brightness / 10, false);
+        write_digit_ascii(3, '0' + brightness % 10, false);
+        // write_digits();
+      }
+      process = true;
       break;
 
-		case KC_VOLD:
-			if (record->event.pressed) {
-				dimmer();
-				write_digit_ascii(1, 'B', false);
-				write_digit_ascii(2, '0' + brightness / 10, false);
-				write_digit_ascii(3, '0' + brightness % 10, false);
-				// write_digits();
-			}
-			process = true;
+    case KC_VOLD:
+      if (record->event.pressed) {
+        dimmer();
+        write_digit_ascii(1, 'B', false);
+        write_digit_ascii(2, '0' + brightness / 10, false);
+        write_digit_ascii(3, '0' + brightness % 10, false);
+        // write_digits();
+      }
+      process = true;
       break;
 
     default:
-			write_digit_ascii(1, 'G', false);
-			write_digit_ascii(2, 'm', false);
-			write_digit_ascii(3, 'L', false);
-			// uint8_t wpm = get_current_wpm();
-			// write_digit_ascii(1, '0' + wpm / 100, false);
-			// write_digit_ascii(2, '0' + (wpm / 10) % 10, false);
-			// write_digit_ascii(3, '0' + brightness % 10, false);
-			// write_digits();
-			process = true;  // Process all other keycodes normally
+      write_digit_ascii(1, 'G', false);
+      write_digit_ascii(2, 'm', false);
+      write_digit_ascii(3, 'L', false);
+      // uint8_t wpm = get_current_wpm();
+      // write_digit_ascii(1, '0' + wpm / 100, false);
+      // write_digit_ascii(2, '0' + (wpm / 10) % 10, false);
+      // write_digit_ascii(3, '0' + brightness % 10, false);
+      // write_digits();
+      process = true;  // Process all other keycodes normally
       break;
   }
 
@@ -538,7 +567,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
 
 layer_state_t layer_state_set_kb(layer_state_t state) {
-	layer_state_set_user(state);
+  layer_state_set_user(state);
 
     if (!splash) {
         switch (get_highest_layer(state)) {
@@ -572,11 +601,11 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
     }
 #endif
 
-	return state;
+  return state;
 }
 
 
 void matrix_scan_kb(void) {
-	matrix_scan_user();
+  matrix_scan_user();
 }
 
