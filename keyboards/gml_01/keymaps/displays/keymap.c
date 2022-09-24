@@ -23,6 +23,11 @@ static bool scrolling_mode = false;
 #define DEFAULT_CPI 8000
 #define SCROLLING_CPI 800
 
+enum custom_keycodes {
+  KC_DISPLAY_UP = SAFE_RANGE,
+  KC_DISPLAY_DOWN
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
@@ -69,31 +74,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |Reset |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |Reset |      |      |      |      |             |      | Next | Dis- | Dis+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 [2] = LAYOUT(
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
   _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,  KC_NUHS, KC_NUBS, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,  _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
+  _______, _______, _______, _______, _______, _______,  _______, _______, KC_MNXT, KC_DISPLAY_DOWN, KC_DISPLAY_UP, KC_MPLY
 ),
 
 /* Fn
  * ,-----------------------------------------------------------------------------------.
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Boot |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  | Left |  Up  | Down |Right | Home | End  |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |Enter |
+ * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # | Back | Forw |      |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |Reset |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
  */
 [3] = LAYOUT(
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    QK_BOOTLOADER,
   KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_LEFT, KC_DOWN, KC_UP  , KC_RIGHT, KC_HOME, KC_END,
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,  KC_NUHS, KC_NUBS, _______, _______, _______,
+  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,  KC_NUHS, KC_MPRV, KC_MNXT, _______, _______,
   _______, _______, _______, _______, _______, _______,  _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
 ),
 
@@ -493,7 +498,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   draw_pixel(x + 2, y + 2, record->event.pressed);
 
   switch (keycode) {
-    case KC_VOLU:
+    case KC_DISPLAY_UP:
       if (record->event.pressed){
         brighter();
         write_digit_ascii(1, 'B', false);
@@ -504,7 +509,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
       process = true;
       break;
 
-    case KC_VOLD:
+    case KC_DISPLAY_DOWN:
       if (record->event.pressed) {
         dimmer();
         write_digit_ascii(1, 'B', false);
