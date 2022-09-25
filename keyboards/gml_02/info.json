@@ -1,0 +1,26 @@
+{
+    "manufacturer": "Ben Webster",
+    "keyboard_name": "gml_01",
+    "maintainer": "trepidacious",
+    "bootloader": "rp2040",
+    "diode_direction": "COL2ROW",
+    "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": true,
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true
+    },
+    "matrix_pins": {
+        "cols": ["GP4", "GP4", "GP4", "GP4", "GP4", "GP4"],
+        "rows": ["GP5", "GP5", "GP5", "GP5",  "GP5", "GP5", "GP5", "GP5"]
+    },
+    "processor": "RP2040",
+    "url": "",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x0000",
+        "vid": "0xFEED"
+    }
+}
