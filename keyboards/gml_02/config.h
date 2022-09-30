@@ -24,7 +24,7 @@
 #define RGB_DI_PIN A1
 
 // OLED on pins GP16 and GP17 (standard Pico labelling)
-#define OLED_DISPLAY_128X32
+// #define OLED_DISPLAY_128X32
 #define I2C_DRIVER I2CD1
 #define I2C1_SDA_PIN GP4
 #define I2C1_SCL_PIN GP5
@@ -34,9 +34,14 @@
 #define SPI_SCK_PIN GP18
 #define SPI_MOSI_PIN GP19
 #define SPI_MISO_PIN GP16
-#define ADNS9800_CS_PIN GP17
-#define POINTING_DEVICE_INVERT_X
-#define POINTING_DEVICE_TASK_THROTTLE_MS 1
+// #define ADNS9800_CS_PIN GP17
+// #define POINTING_DEVICE_INVERT_X
+// #define POINTING_DEVICE_TASK_THROTTLE_MS 1
+
+#define PIMORONI_TRACKBALL_ADDRESS 0x0A
+// #define PIMORONI_TRACKBALL_SCALE 1
+
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
