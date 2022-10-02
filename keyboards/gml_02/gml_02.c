@@ -5,9 +5,15 @@
 #include <hal_pal.h>
 #include "qp.h"
 #include "generated/lcd240.qgf.h"
+#include "generated/gml240.qgf.h"
+#include "generated/lower240.qgf.h"
 
 painter_device_t lcd;
 static painter_image_handle_t lcd240;
+static painter_image_handle_t gml240;
+static painter_image_handle_t lower240;
+
+#define HSV_GML_GOLD    33, 198, 255
 
 //----------------------------------------------------------
 // Initialisation
@@ -30,6 +36,8 @@ int lcd_delay = 0;
 void keyboard_post_init_kb(void) {
 
     lcd240 = qp_load_image_mem(gfx_lcd240);
+    gml240 = qp_load_image_mem(gfx_gml240);
+    lower240 = qp_load_image_mem(gfx_lower240);
 
     // Turn on the LCD BL
     setPinOutput(LCD_BL_PIN);
@@ -47,16 +55,18 @@ void keyboard_post_init_kb(void) {
     // kb_state.lcd_power = 1;
     qp_power(lcd, true);
 
-    if (lcd240 != NULL) {
-      qp_rect(lcd, 0, 0, 239, 239, HSV_GOLDENROD, true);
-    } else {
-      qp_rect(lcd, 0, 0, 239, 239, HSV_RED, true);
-    }
+    // if (lcd240 != NULL) {
+    //   qp_rect(lcd, 0, 0, 239, 239, HSV_GOLDENROD, true);
+    // } else {
+    //   qp_rect(lcd, 0, 0, 239, 239, HSV_RED, true);
+    // }
 
-    qp_setpixel(lcd, 10, 10, HSV_WHITE);
+    // qp_setpixel(lcd, 10, 10, HSV_WHITE);
 
-    qp_drawimage(lcd, 0, 0, lcd240);
-
+    // qp_drawimage(lcd, 0, 0, lcd240);
+    // qp_drawimage(lcd, 0, 0, gml240);
+    // qp_drawimage_recolor(lcd, 0, 0, gml240, HSV_GML_GOLD, HSV_BLACK);
+    qp_drawimage_recolor(lcd, 0, 0, lower240, HSV_GML_GOLD, HSV_BLACK);
 
     qp_flush(lcd);
 
@@ -76,11 +86,14 @@ void keyboard_post_init_kb(void) {
 void housekeeping_task_kb(void) {
     // qp_rect(lcd, 0, 0, 239, 239, HSV_AZURE, true);
 
-    qp_setpixel(lcd, lcd_delay/256 + lcd_delay, lcd_delay, HSV_WHITE);
+    // qp_setpixel(lcd, lcd_delay/256 + lcd_delay, lcd_delay, HSV_WHITE);
 
     // qp_flush(lcd);
 
     lcd_delay ++;
+
+    // qp_drawimage_recolor(lcd, 0, 0, gml240, lcd_delay % 256, 198, 255, HSV_BLACK);
+
 
 //     if (!lcd_init && lcd_delay > 4000) {
 

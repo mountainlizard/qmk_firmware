@@ -26,4 +26,6 @@ QUANTUM_PAINTER_ENABLE = yes
 QUANTUM_PAINTER_DRIVERS = st7789_spi
 
 SRC += \
-	generated/lcd240.qgf.c
+	generated/lcd240.qgf.c \
+	generated/lower240.qgf.c \
+	generated/gml240.qgf.c
