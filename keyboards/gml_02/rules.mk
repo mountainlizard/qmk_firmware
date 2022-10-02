@@ -11,12 +11,16 @@
 
 
 OPT_DEFS += -DHAL_USE_I2C=TRUE
+OPT_DEFS += -DHAL_USE_SPI=TRUE
 
 # TODO remove, specified in info.json?
 # CONSOLE_ENABLE = yes
 
 # For trackball
-POINTING_DEVICE_ENABLE = yes
-POINTING_DEVICE_DRIVER = pimoroni_trackball
+# POINTING_DEVICE_ENABLE = yes
+# POINTING_DEVICE_DRIVER = pimoroni_trackball
 
 BOARD = GENERIC_RP_RP2040
+
+QUANTUM_PAINTER_ENABLE = yes
+QUANTUM_PAINTER_DRIVERS = st7789_spi

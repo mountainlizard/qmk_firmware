@@ -1,6 +1,9 @@
 #pragma once
 
 #include "quantum.h"
+#include "qp.h"
+
+extern painter_device_t lcd;
 
 #define LAYOUT( \
   k00, k01, k02, k03, k04, k05, k06, k07, k08, k09, k0a, k0b, \

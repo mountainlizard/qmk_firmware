@@ -33,13 +33,16 @@
 #define SPI_DRIVER SPID0
 #define SPI_SCK_PIN GP18
 #define SPI_MOSI_PIN GP19
-#define SPI_MISO_PIN GP16
+// MISO should be 16, but we're using this for D/C on LCD panel so just assign another unused MISO pin, GP0 is SPI0RX and is not connected to anything on breakout garden, we're not using UART0 so should be fine
+#define SPI_MISO_PIN GP0
 // #define ADNS9800_CS_PIN GP17
 // #define POINTING_DEVICE_INVERT_X
 // #define POINTING_DEVICE_TASK_THROTTLE_MS 1
 
-#define PIMORONI_TRACKBALL_ADDRESS 0x0A
+// #define MOUSE_EXTENDED_REPORT
+// #define PIMORONI_TRACKBALL_ADDRESS 0x0A
 // #define PIMORONI_TRACKBALL_SCALE 1
+// #define POINTING_DEVICE_TASK_THROTTLE_MS 1
 
 
 /*
