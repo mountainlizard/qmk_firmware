@@ -42,7 +42,7 @@ void keyboard_post_init_kb(void) {
     // Turn on the LCD and clear the display
     // kb_state.lcd_power = 1;
     qp_power(lcd, true);
-    qp_rect(lcd, 0, 0, 239, 239, HSV_BLUE, true);
+    qp_rect(lcd, 0, 0, 239, 239, HSV_GOLDENROD, true);
 
     qp_setpixel(lcd, 10, 10, HSV_WHITE);
 
