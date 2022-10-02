@@ -4,8 +4,10 @@
 
 #include <hal_pal.h>
 #include "qp.h"
+#include "generated/lcd240.qgf.h"
 
 painter_device_t lcd;
+static painter_image_handle_t lcd240;
 
 //----------------------------------------------------------
 // Initialisation
@@ -27,6 +29,8 @@ int lcd_delay = 0;
 
 void keyboard_post_init_kb(void) {
 
+    lcd240 = qp_load_image_mem(gfx_lcd240);
+
     // Turn on the LCD BL
     setPinOutput(LCD_BL_PIN);
     writePinHigh(LCD_BL_PIN);
@@ -42,9 +46,17 @@ void keyboard_post_init_kb(void) {
     // Turn on the LCD and clear the display
     // kb_state.lcd_power = 1;
     qp_power(lcd, true);
-    qp_rect(lcd, 0, 0, 239, 239, HSV_GOLDENROD, true);
+
+    if (lcd240 != NULL) {
+      qp_rect(lcd, 0, 0, 239, 239, HSV_GOLDENROD, true);
+    } else {
+      qp_rect(lcd, 0, 0, 239, 239, HSV_RED, true);
+    }
 
     qp_setpixel(lcd, 10, 10, HSV_WHITE);
+
+    qp_drawimage(lcd, 0, 0, lcd240);
+
 
     qp_flush(lcd);
 
