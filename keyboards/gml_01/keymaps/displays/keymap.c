@@ -21,7 +21,6 @@
 static bool scrolling_mode = false;
 
 #define DEFAULT_CPI 8000
-#define SCROLLING_CPI 800
 
 enum custom_keycodes {
   KC_DISPLAY_UP = SAFE_RANGE,
@@ -552,7 +551,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 static int scroll_total_x = 0;
 static int scroll_total_y = 0;
 
-#define SCROLL_DIVISOR 16
+#define SCROLL_DIVISOR 160
 
 static bool point_drawn = false;
 static int point_x = -1;
@@ -565,13 +564,8 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
       draw_pixel_2x2(point_x, point_y, 0);
     }
 
-    if (scrolling_mode) {
-      point_x = mouse_report.x + 7;
-      point_y = mouse_report.y + 3;
-    } else {
-      point_x = mouse_report.x / 4 + 7;
-      point_y = mouse_report.y / 4 + 3;
-    }
+    point_x = mouse_report.x / 3 + 7;
+    point_y = mouse_report.y / 3 + 3;
 
     point_drawn = true;
     draw_pixel_2x2(point_x, point_y, 1);
@@ -635,13 +629,9 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case 3:  // If we're on the FN layer enable scrolling mode
             scrolling_mode = true;
-            pointing_device_set_cpi(SCROLLING_CPI);
             break;
         default:
-            if (scrolling_mode) {  // check if we were scrolling before and set disable if so
-                scrolling_mode = false;
-                pointing_device_set_cpi(DEFAULT_CPI);
-            }
+            scrolling_mode = false;
             break;
     }
 #endif
