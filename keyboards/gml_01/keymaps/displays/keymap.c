@@ -477,6 +477,12 @@ void matrix_scan_user(void) {
 static int left_cols[] = { 1, 5, 4, 3, 0, 2 };
 static int right_cols[] = { 0, 1, 4, 5, 3, 2 };
 
+static void draw_pixel_2x2(int16_t x, int16_t y, uint16_t color) {
+    draw_pixel(x, y, color);
+    draw_pixel(x+1, y, color);
+    draw_pixel(x, y+1, color);
+    draw_pixel(x+1, y+1, color);
+}
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
@@ -548,31 +554,60 @@ static int scroll_total_y = 0;
 
 #define SCROLL_DIVISOR 16
 
+static bool point_drawn = false;
+static int point_x = -1;
+static int point_y = -1;
+
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (scrolling_mode) {
 
-        scroll_total_x += mouse_report.x;
-        scroll_total_y += mouse_report.y;
-
-        int scroll_x = scroll_total_x / SCROLL_DIVISOR;
-        int scroll_y = scroll_total_y / SCROLL_DIVISOR;
-
-        if (scroll_x != 0) {
-            scroll_total_x -= scroll_x * SCROLL_DIVISOR;
-        }
-        if (scroll_y != 0) {
-            scroll_total_y -= scroll_y * SCROLL_DIVISOR;
-        }
-
-        mouse_report.h = scroll_x;
-        mouse_report.v = -scroll_y;
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-    } else {
-        scroll_total_x = 0;
-        scroll_total_y = 0;
+  if (mouse_report.x != 0 || mouse_report.y != 0) {
+    if (point_drawn) {
+      draw_pixel_2x2(point_x, point_y, 0);
     }
-    return mouse_report;
+
+    if (scrolling_mode) {
+      point_x = mouse_report.x + 7;
+      point_y = mouse_report.y + 3;
+    } else {
+      point_x = mouse_report.x / 4 + 7;
+      point_y = mouse_report.y / 4 + 3;
+    }
+
+    point_drawn = true;
+    draw_pixel_2x2(point_x, point_y, 1);
+    write_matrix();
+  } else {
+    if (point_drawn) {
+      draw_pixel_2x2(point_x, point_y, 0);
+      point_drawn = false;
+      write_matrix();
+    }
+  }
+
+  if (scrolling_mode) {
+
+    scroll_total_x += mouse_report.x;
+    scroll_total_y += mouse_report.y;
+
+    int scroll_x = scroll_total_x / SCROLL_DIVISOR;
+    int scroll_y = scroll_total_y / SCROLL_DIVISOR;
+
+    if (scroll_x != 0) {
+      scroll_total_x -= scroll_x * SCROLL_DIVISOR;
+    }
+    if (scroll_y != 0) {
+      scroll_total_y -= scroll_y * SCROLL_DIVISOR;
+    }
+
+    mouse_report.h = scroll_x;
+    mouse_report.v = -scroll_y;
+    mouse_report.x = 0;
+    mouse_report.y = 0;
+  } else {
+    scroll_total_x = 0;
+    scroll_total_y = 0;
+  }
+  return mouse_report;
 }
 
 
