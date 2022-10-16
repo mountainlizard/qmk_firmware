@@ -20,8 +20,6 @@
 
 static bool scrolling_mode = false;
 
-#define DEFAULT_CPI 8000
-
 enum custom_keycodes {
   KC_DISPLAY_UP = SAFE_RANGE,
   KC_DISPLAY_DOWN
@@ -439,7 +437,10 @@ void matrix_init_kb(void) {
 void pointing_device_init_kb(void){
     pointing_device_init_user();
 
+#ifdef DEFAULT_CPI
     pointing_device_set_cpi(DEFAULT_CPI);
+#endif
+
 }
 #endif
 
@@ -551,8 +552,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 static int scroll_total_x = 0;
 static int scroll_total_y = 0;
 
-#define SCROLL_DIVISOR 160
-
 static bool point_drawn = false;
 static int point_x = -1;
 static int point_y = -1;
@@ -564,8 +563,8 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
       draw_pixel_2x2(point_x, point_y, 0);
     }
 
-    point_x = mouse_report.x / 3 + 7;
-    point_y = mouse_report.y / 3 + 3;
+    point_x = mouse_report.x / POINTER_DISPLAY_DIVISOR + 7;
+    point_y = mouse_report.y / POINTER_DISPLAY_DIVISOR + 3;
 
     point_drawn = true;
     draw_pixel_2x2(point_x, point_y, 1);

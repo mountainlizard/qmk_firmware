@@ -15,8 +15,12 @@ OPT_DEFS += -DHAL_USE_I2C=TRUE
 # TODO remove, specified in info.json?
 # CONSOLE_ENABLE = yes
 
-# For trackball
 POINTING_DEVICE_ENABLE = yes
+
+# For trackball
 POINTING_DEVICE_DRIVER = adns9800
+
+# For trackpad
+# POINTING_DEVICE_DRIVER = cirque_pinnacle_spi
 
 BOARD = GENERIC_RP_RP2040
