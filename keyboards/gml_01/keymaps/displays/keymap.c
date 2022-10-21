@@ -558,7 +558,7 @@ static int point_y = -1;
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
-  if (mouse_report.x != 0 || mouse_report.y != 0) {
+  if (mouse_report.x <= -2 || mouse_report.x >= 2 || mouse_report.y <= -2 || mouse_report.y >= 2) {
     if (point_drawn) {
       draw_pixel_2x2(point_x, point_y, 0);
     }
