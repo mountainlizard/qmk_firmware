@@ -1,5 +1,7 @@
 # Quantum Mechanical Keyboard Firmware
 
+** Development for RP2040 keyboard with new PCBs etc. is in gml_01_pico branch **
+
 [![Current Version](https://img.shields.io/github/tag/qmk/qmk_firmware.svg)](https://github.com/qmk/qmk_firmware/tags)
 [![Discord](https://img.shields.io/discord/440868230475677696.svg)](https://discord.gg/Uq7gcHh)
 [![Docs Status](https://img.shields.io/badge/docs-ready-orange.svg)](https://docs.qmk.fm)
